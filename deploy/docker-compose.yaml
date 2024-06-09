@@ -49,7 +49,6 @@ services:
 networks:
   ritual:
 
-
 volumes:
   ritual-node-logs:
   ritual-redis-data:

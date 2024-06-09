@@ -1,17 +1,17 @@
-version: '3'
+version: "3"
 
 services:
   node:
-    image: ritualnetwork/infernet-node:latest-gpu
+    image: ritualnetwork/infernet-node:1.0.0-gpu
     ports:
       - "0.0.0.0:4000:4000"
     volumes:
       - ./config.json:/app/config.json
-      - node-logs:/logs
+      - ritual-node-logs:/logs
       - /var/run/docker.sock:/var/run/docker.sock
     tty: true
     networks:
-      - network
+      - ritual
     deploy:
       resources:
         reservations:
@@ -28,19 +28,19 @@ services:
     stop_grace_period: 1m
 
   redis:
-    image: redis:latest
+    image: redis:7.2.5-alpine
     expose:
       - "6379"
     networks:
-      - network
+      - ritual
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
-      - redis-data:/data
+      - ritual-redis-data:/data
     restart:
       on-failure
 
   fluentbit:
-    image: fluent/fluent-bit:latest
+    image: fluent/fluent-bit:3.0.6
     expose:
       - "24224"
     environment:
@@ -49,14 +49,13 @@ services:
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - /var/log:/var/log:ro
     networks:
-      - network
+      - ritual
     restart:
       on-failure
 
 networks:
-  network:
-
+  ritual:
 
 volumes:
-  node-logs:
-  redis-data:
+  ritual-node-logs:
+  ritual-redis-data:
